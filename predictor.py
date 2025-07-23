@@ -9,21 +9,15 @@ aiplatform.init(
 # Deploying an endpoint for the model so that I run some tests
 endpoint = aiplatform.Endpoint(endpoint_name = '1818465788504309760')
 
-instances = [
-    {
-        
-        "equipment_id": "EQ123",
-        "sensor_1": 0.5,
-        "sensor_2": 0.3,
-        "sensor_3": 0.2,
-        "sensor_4": 0.1,
-        "sensor_5": 0.4,
-        "sensor_6": 0.6,
-        "sensor_7": 0.8,
-        "sensor_8": 0.9
-    }
-]
+#This function Sends sensor data to Vertex AI endpoint and returns prediction.
+def predict_maintenance(sensor_data: dict):
+    required_fields = ["equipment_id", "failure", "fuel_rate", "last_maintenance", "pressure", "runtime_hours", "temperature", "vibration"]
+    for field in required_fields:
+        if field not in sensor_data:
+            return {"error": f"Missing field: {field}"}
 
-# Making a prediction
-prediction = endpoint.predict(instances = instances)
-print("Prediction results:", prediction.predictions)
+    try:
+        prediction = endpoint.predict([sensor_data])
+        return prediction.predictions[0]
+    except Exception as e:
+        return {"error": str(e)}
