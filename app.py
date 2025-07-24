@@ -41,10 +41,12 @@ st.set_page_config(page_title="SmartMining", layout="wide")
 tabs = ["Dashboard", "Equipments", "SmartMineAI Assistant"]
 selected_tab = st.sidebar.radio("Menu", tabs)
 
+# Load equipment data once (used across tabs)
+df = get_equipment_data()
+df['Status'] = df.apply(assign_status, axis=1)
+
 if selected_tab == "Dashboard":
     st.header("SmartMining Dashboard")
-    df = get_equipment_data()
-    df['Status'] = df.apply(assign_status, axis=1)
 
     # KPIs
     total_machines = len(df)
@@ -104,8 +106,6 @@ if selected_tab == "Dashboard":
 
 elif selected_tab == "Equipments":
     st.header("Equipment Details")
-    df = get_equipment_data()
-    df['Status'] = df.apply(assign_status, axis=1)
     
     # Add filtering options
     status_filter = st.multiselect(
@@ -114,11 +114,10 @@ elif selected_tab == "Equipments":
         default=['Critical', 'Warning', 'Good']
     )
     
-    if status_filter:
-        df = df[df['Status'].isin(status_filter)]
+    filtered_df = df[df['Status'].isin(status_filter)] if status_filter else df
     
     st.dataframe(
-        df.style.applymap(
+        filtered_df.style.applymap(
             lambda x: 'background-color: #ffe6e6' if x == 'Critical' else 
                      'background-color: #fff4e5' if x == 'Warning' else 
                      'background-color: #e8f5e9',
@@ -134,6 +133,11 @@ elif selected_tab == "SmartMineAI Assistant":
     # Initialize chat history
     if "messages" not in st.session_state:
         st.session_state.messages = []
+        # Add welcome message
+        st.session_state.messages.append({
+            "role": "assistant", 
+            "content": "Hello! I'm your SmartMining AI Assistant. Ask me about equipment status, maintenance predictions, or mining operations."
+        })
 
     # Display chat messages
     for message in st.session_state.messages:
@@ -151,9 +155,21 @@ elif selected_tab == "SmartMineAI Assistant":
         
         # Display assistant response
         with st.chat_message("assistant"):
-            with st.spinner("Thinking..."):
-                response = smart_mining_chat(prompt)
+            with st.spinner("SmartAI is Thinking..."):
+                # Get fresh equipment data
+                current_df = get_equipment_data()
+                current_df['Status'] = current_df.apply(assign_status, axis=1)
+                
+                # Generate response with equipment context
+                response = smart_mining_chat(prompt, current_df)
                 st.markdown(response)
         
         # Add assistant response to chat history
         st.session_state.messages.append({"role": "assistant", "content": response})
+
+    # Add clear chat button
+    if st.button("Clear Chat History"):
+        st.session_state.messages = [
+            {"role": "assistant", "content": "Chat history cleared. How can I help you?"}
+        ]
+        st.rerun()
