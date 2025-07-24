@@ -1,0 +1,109 @@
+/* Main App Background - Dark theme with subtle texture */
+.stApp {
+    background-color: #121212;
+    background-image: radial-gradient(circle at 10% 20%, #1a2a3a 0%, #121212 90%);
+    color: #ffffff;
+}
+
+/* Sidebar Styling */
+div[data-testid="stSidebar"] {
+    background-color: #1e1e1e !important;
+    border-right: 1px solid #333333;
+}
+
+/* Sidebar Radio Buttons */
+.st-eb {
+    background-color: #2a2a2a !important;
+}
+
+/* Tab Selection Highlight */
+.st-eb > div[role="radiogroup"] > label[data-baseweb="radio"] > div:first-child {
+    background-color: #3a7ca5 !important;
+}
+
+/* Data Table Styling */
+.stDataFrame {
+    background-color: #1e1e1e !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* Headers */
+h1, h2, h3 {
+    color: #ffffff !important;
+    border-bottom: 1px solid #ffffff;
+    padding-bottom: 8px;
+}
+
+/* Buttons */
+.stButton > button {
+    background: linear-gradient(to right, #3a7ca5 0%, #2a5a78 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+    transition: all 0.3s ease !important;
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(58, 124, 165, 0.4) !important;
+}
+
+/* Table Cells */
+.dataframe td {
+    background-color: #252525 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Table Headers */
+.dataframe th {
+    background-color: #3a7ca5 !important;
+    color: white !important;
+}
+
+/* Add some mining-themed decorative elements */
+.stApp::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.03;
+    z-index: -1;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%23FFFFFF"><path d="M50 0 L100 50 L50 100 L0 50 Z"/></svg>');
+    background-size: 100px 100px;
+}
+.chat-container {
+  max-width: 800px;
+  margin: auto;
+}
+
+.chat-bubble {
+  padding: 12px 16px;
+  margin: 8px 0;
+  border-radius: 16px;
+  display: inline-block;
+  max-width: 80%;
+  word-wrap: break-word;
+  font-size: 16px;
+}
+
+.user {
+  background-color: #DCF8C6;
+  align-self: flex-end;
+  margin-left: auto;
+  text-align: right;
+}
+
+.ai {
+  background-color: #E4E6EB;
+  align-self: flex-start;
+  margin-right: auto;
+  text-align: left;
+}
+
+.chat-wrapper {
+  display: flex;
+  flex-direction: column;
+}
